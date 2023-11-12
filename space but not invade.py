@@ -10,7 +10,7 @@ GREEN = (0, 255, 0)
 pygame.init() #inicia la libreria pygame
 pygame.mixer.init()
 screen = pygame.display.set_mode((WIDTH, HEIGHT))
-pygame.display.set_caption("Shooter") #le ponemos nombre a la ventana
+pygame.display.set_caption("Trabajo Integrador Pygame") #le ponemos nombre a la ventana
 clock = pygame.time.Clock() 
 
 def draw_text(surface, text, size, x, y):
@@ -28,6 +28,7 @@ def draw_shield_bar(surface, x, y, percentage):
 	fill = pygame.Rect(x, y, fill, BAR_HEIGHT)
 	pygame.draw.rect(surface, GREEN, fill)
 	pygame.draw.rect(surface, WHITE, border, 2)
+
 
 class Player(pygame.sprite.Sprite):
 	def __init__(self):
@@ -138,9 +139,9 @@ class Explosion(pygame.sprite.Sprite):
 
 def show_go_screen():
 	screen.blit(background, [0,0])
-	draw_text(screen, "SHOOTER", 65, WIDTH // 2, HEIGHT // 4)
-	draw_text(screen, "Usar flechas direccionales y espacio", 27, WIDTH // 2, HEIGHT // 2)
-	draw_text(screen, "Presione una tecla para iniciar", 20, WIDTH // 2, HEIGHT * 3/4)
+	draw_text(screen, "VIAJE AL ESPACIO", 75, WIDTH // 2, HEIGHT // 4)
+	draw_text(screen, "Usar flechas direccionales para moverte en la pantalla y espacio para disparar", 22, WIDTH // 2, HEIGHT // 2)
+	draw_text(screen, "Presione una tecla para iniciar y Buena suerte :D", 20, WIDTH // 2, HEIGHT * 3/4)
 	pygame.display.flip()
 	waiting = True
 	while waiting:
@@ -184,7 +185,7 @@ background = pygame.image.load("assets/background.png").convert()
 # Cargar sonidos
 laser_sound = pygame.mixer.Sound("assets/laser5.ogg")
 explosion_sound = pygame.mixer.Sound("assets/explosion.wav")
-pygame.mixer.music.load("assets/music.ogg")
+pygame.mixer.music.load("assets/Modelo de musica Prueba.mp3")
 pygame.mixer.music.set_volume(0.2)
 
 
@@ -193,6 +194,7 @@ pygame.mixer.music.set_volume(0.2)
 #### ----------GAME OVER
 game_over = True
 running = True
+pygame.mixer.music.play(loops=-1)
 while running:
 	if game_over:
 
@@ -233,6 +235,7 @@ while running:
 		explosion = Explosion(hit.rect.center)
 		all_sprites.add(explosion)
 		meteor = Meteor()
+		enemigo = Enemigo()
 		all_sprites.add(meteor)
 		meteor_list.add(meteor)
 
@@ -241,6 +244,7 @@ while running:
 	for hit in hits:
 		player.shield -= 25
 		meteor = Meteor()
+		enemigo = Enemigo()
 		all_sprites.add(meteor)
 		meteor_list.add(meteor)
 		if player.shield <= 0:
@@ -255,6 +259,6 @@ while running:
 
 	# Escudo.
 	draw_shield_bar(screen, 5, 5, player.shield)
-
+	           
 	pygame.display.flip()
 pygame.quit()
