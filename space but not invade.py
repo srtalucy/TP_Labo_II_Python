@@ -28,7 +28,20 @@ def draw_shield_bar(surface, x, y, percentage):
 	fill = pygame.Rect(x, y, fill, BAR_HEIGHT)
 	pygame.draw.rect(surface, GREEN, fill)
 	pygame.draw.rect(surface, WHITE, border, 2)
-
+ 
+def barra_de_vida(frame, x, y, nivel):
+    long=100
+    alto=20
+    fill= int(nivel/100)*long
+    border = pygame.Rect(x, y, long, alto)
+    fill=pygame.Rect(x, y, fill, alto)
+    pygame.draw.rect(frame, (255, 0, 55), fill)
+    pygame.draw.rect(frame, (0, 0, 0), border, 4)
+          
+     
+     
+     
+	
 
 class Player(pygame.sprite.Sprite):
 	def __init__(self):
@@ -235,7 +248,7 @@ while running:
 		explosion = Explosion(hit.rect.center)
 		all_sprites.add(explosion)
 		meteor = Meteor()
-		enemigo = Enemigo()
+		#enemigo = Enemigo()
 		all_sprites.add(meteor)
 		meteor_list.add(meteor)
 
@@ -244,7 +257,7 @@ while running:
 	for hit in hits:
 		player.shield -= 25
 		meteor = Meteor()
-		enemigo = Enemigo()
+		#enemigo = Enemigo()
 		all_sprites.add(meteor)
 		meteor_list.add(meteor)
 		if player.shield <= 0:
