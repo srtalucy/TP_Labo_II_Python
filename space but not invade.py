@@ -13,6 +13,8 @@ screen = pygame.display.set_mode((WIDTH, HEIGHT))
 pygame.display.set_caption("Trabajo Integrador Pygame") #le ponemos nombre a la ventana
 clock = pygame.time.Clock() 
 
+enemigo_aparecido = False
+
 def draw_text(surface, text, size, x, y):
 	font = pygame.font.SysFont("serif", size)
 	text_surface = font.render(text, True, WHITE)
@@ -101,6 +103,24 @@ class Meteor(pygame.sprite.Sprite):
 			self.rect.x = random.randrange(WIDTH - self.rect.width)
 			self.rect.y = random.randrange(-140, - 100)
 			self.speedy = random.randrange(1, 10)
+
+class Enemigo(pygame.sprite.Sprite):
+    def __init__(self):
+        super().__init__()
+        self.image = pygame.image.load("assets/Enemigo.png ").convert()
+        self.image.set_colorkey(BLACK) 
+        self.rect = self.image.get_rect()
+        self.rect.centerx = WIDTH // 2
+        self.rect.centery = 0  # Ajusta la posición inicial del enemigo
+        self.speed_Y = 0  # Ajusta la velocidad de movimiento del enemigo
+        self.vida = 500 # Agregamos la vida inicial del enemigo
+        
+
+    def update(self):
+        self.speed_Y = 0
+        if (self.rect.centery != 100):
+            self.speed_Y = 1
+            self.rect.y += self.speed_Y
 
 class Bullet(pygame.sprite.Sprite):
 	def __init__(self, x, y):
@@ -266,4 +286,11 @@ while running:
 	draw_shield_bar(screen, 5, 5, player.shield)
 	           
 	pygame.display.flip()
+	#hacer aparecer el enemigo
+	if score >= 100 and not enemigo_aparecido:
+		enemigo = Enemigo()
+		all_sprites.add(enemigo)
+		enemigo_aparecido = True
+	if enemigo_aparecido:
+		enemigo.update()
 pygame.quit()
