@@ -29,14 +29,6 @@ def draw_shield_bar(surface, x, y, percentage):
 	pygame.draw.rect(surface, GREEN, fill)
 	pygame.draw.rect(surface, WHITE, border, 2)
  
-def barra_de_vida(frame, x, y, nivel):
-    long=100
-    alto=20
-    fill= int(nivel/100)*long
-    border = pygame.Rect(x, y, long, alto)
-    fill=pygame.Rect(x, y, fill, alto)
-    pygame.draw.rect(frame, (255, 0, 55), fill)
-    pygame.draw.rect(frame, (0, 0, 0), border, 4)
           
      
      
