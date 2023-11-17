@@ -6,14 +6,12 @@ HEIGHT = 600
 BLACK = (0, 0, 0)
 WHITE = ( 255, 255, 255)
 GREEN = (0, 255, 0)
-
+RED   = (255, 0, 0)
 pygame.init() #inicia la libreria pygame
 pygame.mixer.init()
 screen = pygame.display.set_mode((WIDTH, HEIGHT))
 pygame.display.set_caption("Trabajo Integrador Pygame") #le ponemos nombre a la ventana
 clock = pygame.time.Clock() 
-
-enemigo_aparecido = False
 
 def draw_text(surface, text, size, x, y):
 	font = pygame.font.SysFont("serif", size)
@@ -22,20 +20,23 @@ def draw_text(surface, text, size, x, y):
 	text_rect.midtop = (x, y)
 	surface.blit(text_surface, text_rect)
 
-def draw_shield_bar(surface, x, y, percentage):
-	BAR_LENGHT = 100
+def draw_shield_bar(surface, x, y, percentage, lenght, color):
+	BAR_COLOR = color
+	BAR_LENGHT = lenght
 	BAR_HEIGHT = 10
+	# Calcular el ancho de la barra de vida
 	fill = (percentage / 100) * BAR_LENGHT
 	border = pygame.Rect(x, y, BAR_LENGHT, BAR_HEIGHT)
+	# Definir el rectángulo para la barra de vida
 	fill = pygame.Rect(x, y, fill, BAR_HEIGHT)
-	pygame.draw.rect(surface, GREEN, fill)
+	# Dibujar la barra de vida dependiendo de si 1:player o 2:enemigo
+	if BAR_COLOR == 1:
+		pygame.draw.rect(surface, GREEN, fill)
+	if BAR_COLOR == 2:
+		pygame.draw.rect(surface, RED, fill)
+	# Dibujar el borde de la barra de vida
 	pygame.draw.rect(surface, WHITE, border, 2)
- 
-          
-     
-     
-     
-	
+
 
 class Player(pygame.sprite.Sprite):
 	def __init__(self):
@@ -72,8 +73,6 @@ class Player(pygame.sprite.Sprite):
 			self.rect.bottom = HEIGHT
 		if self.rect.top < 0:
 			self.rect.top = 0
-
-
 
 	def shoot(self):
 		bullet = Bullet(self.rect.centerx, self.rect.top)
@@ -113,31 +112,20 @@ class Enemigo(pygame.sprite.Sprite):
         self.rect.centerx = WIDTH // 2
         self.rect.centery = 0  # Ajusta la posición inicial del enemigo
         self.speed_Y = 0  # Ajusta la velocidad de movimiento del enemigo
-        self.speed_X = 0
-        self.vida = 500 # Agregamos la vida inicial del enemigo
+        self.vida = 100 # Agregamos la vida inicial del enemigo
         
-
+	
     def update(self):
         self.speed_Y = 0
-        self.speed_X = 0
         if (self.rect.centery != 100):
             self.speed_Y = 1
             self.rect.y += self.speed_Y
-        self.rect.x += self.speed_X
-        if self.rect.right > WIDTH:
-            self.speed_X -= 1
-        if self.rect.left < 0:
-            self.speed_X += 1
-        if self.rect.bottom > HEIGHT:
-            self.rect.bottom = HEIGHT
-        if self.rect.top < 0:
-            self.rect.top = 0
-        
-        
+
+
 class Bullet(pygame.sprite.Sprite):
 	def __init__(self, x, y):
 		super().__init__()
-		self.image = pygame.image.load("assets/laser2.png")
+		self.image = pygame.image.load("assets/laser1.png")
 		self.image.set_colorkey(BLACK)
 		self.rect = self.image.get_rect()
 		self.rect.y = y
@@ -202,11 +190,6 @@ meteor_list = ["assets/meteorGrey_big1.png", "assets/meteorGrey_big2.png", "asse
 for img in meteor_list:
 	meteor_images.append(pygame.image.load(img).convert())
 
-
-
-
-
-
 ####----------------EXPLOSTION IMAGENES --------------
 explosion_anim = []
 for i in range(9):
@@ -225,13 +208,13 @@ explosion_sound = pygame.mixer.Sound("assets/explosion.wav")
 pygame.mixer.music.load("assets/Modelo de musica Prueba.mp3")
 pygame.mixer.music.set_volume(0.2)
 
-
-#pygame.mixer.music.play(loops=-1)
-
-#### ----------GAME OVER
+#### ----------GAME OVER----------####
 game_over = True
 running = True
 pygame.mixer.music.play(loops=-1)
+enemigo_aparecido = False
+enemigo = Enemigo()
+puntos = 100 #Cantidad de puntos para que aparezca el jefe
 while running:
 	if game_over:
 
@@ -241,16 +224,16 @@ while running:
 		all_sprites = pygame.sprite.Group()
 		meteor_list = pygame.sprite.Group()
 		bullets = pygame.sprite.Group()
-		
+		enemigo_aparecido = False
 		player = Player()
 		all_sprites.add(player)
-		for i in range(8):
-			meteor = Meteor()
-			all_sprites.add(meteor)
-			meteor_list.add(meteor)
+		
+		for i in range(10):
+		  	meteor = Meteor()
+		  	all_sprites.add(meteor)
+		  	meteor_list.add(meteor)
 
 		score = 0
-
 
 	clock.tick(60)
 	for event in pygame.event.get():
@@ -261,9 +244,8 @@ while running:
 			if event.key == pygame.K_SPACE:
 				player.shoot()
 		
-
 	all_sprites.update()
-	
+
 	#colisiones - meteoro - laser
 	hits = pygame.sprite.groupcollide(meteor_list, bullets, True, True)
 	for hit in hits:
@@ -271,41 +253,55 @@ while running:
 		#explosion_sound.play()
 		explosion = Explosion(hit.rect.center)
 		all_sprites.add(explosion)
-		meteor = Meteor()
-		#enemigo = Enemigo()
-		all_sprites.add(meteor)
-		meteor_list.add(meteor)
-
+		if score < puntos:
+			meteor = Meteor()
+			all_sprites.add(meteor)
+			meteor_list.add(meteor)
 	# Checar colisiones - jugador - meteoro
 	hits = pygame.sprite.spritecollide(player, meteor_list, True)
 	for hit in hits:
 		player.shield -= 25
-		meteor = Meteor()
-		#enemigo = Enemigo()
-		all_sprites.add(meteor)
-		meteor_list.add(meteor)
+		if score < puntos:
+			meteor = Meteor()
+			all_sprites.add(meteor)
+			meteor_list.add(meteor)
 		if player.shield <= 0:
 			game_over = True
 
+	# Dentro del bucle principal, después de la línea que maneja las colisiones meteor-bala
+	if score >= puntos:
+		hits = pygame.sprite.spritecollide(enemigo, bullets, True)
+		for hit in hits:
+			enemigo.vida -= 10  # Resta vida al enemigo cuando es alcanzado por una bala
+			if enemigo.vida <= 0:
+				enemigo.kill()  # Elimina al enemigo si su vida llega a cero o menos
+				enemigo_aparecido = False  # Restablece el indicador para que pueda aparecer de nuevo
+				game_over = True
+
 	screen.blit(background, [0, 0])
-
 	all_sprites.draw(screen)
-
-	#Marcador
-	draw_text(screen, str(score), 25, WIDTH // 2, 10)
-
-	# Escudo.
-	draw_shield_bar(screen, 5, 5, player.shield)
-	           
-	pygame.display.flip()
+       
 	#hacer aparecer el enemigo
-	if score >= 100 and not enemigo_aparecido:
+	if score >= puntos and not enemigo_aparecido:
 		enemigo = Enemigo()
 		all_sprites.add(enemigo)
 		enemigo_aparecido = True
 	if enemigo_aparecido:
 		enemigo.update()
-		
-		
-pygame.quit()
+			
+	# Marcador
+	draw_text(screen, str(score), 25, WIDTH // 2, 10)
+	# Escudo.
+	draw_shield_bar(screen, 5, 590, player.shield, 100,1)
+	#vida enemigo
+	if score >= puntos:
+		draw_shield_bar(screen,140,5, enemigo.vida, 500,2)
 
+
+
+
+
+
+
+	pygame.display.flip()
+pygame.quit()
