@@ -113,19 +113,31 @@ class Enemigo(pygame.sprite.Sprite):
         self.rect.centerx = WIDTH // 2
         self.rect.centery = 0  # Ajusta la posición inicial del enemigo
         self.speed_Y = 0  # Ajusta la velocidad de movimiento del enemigo
+        self.speed_X = 0
         self.vida = 500 # Agregamos la vida inicial del enemigo
         
 
     def update(self):
         self.speed_Y = 0
+        self.speed_X = 0
         if (self.rect.centery != 100):
             self.speed_Y = 1
             self.rect.y += self.speed_Y
-
+        self.rect.x += self.speed_X
+        if self.rect.right > WIDTH:
+            self.speed_X -= 1
+        if self.rect.left < 0:
+            self.speed_X += 1
+        if self.rect.bottom > HEIGHT:
+            self.rect.bottom = HEIGHT
+        if self.rect.top < 0:
+            self.rect.top = 0
+        
+        
 class Bullet(pygame.sprite.Sprite):
 	def __init__(self, x, y):
 		super().__init__()
-		self.image = pygame.image.load("assets/laser1.png")
+		self.image = pygame.image.load("assets/laser2.png")
 		self.image.set_colorkey(BLACK)
 		self.rect = self.image.get_rect()
 		self.rect.y = y
@@ -229,7 +241,7 @@ while running:
 		all_sprites = pygame.sprite.Group()
 		meteor_list = pygame.sprite.Group()
 		bullets = pygame.sprite.Group()
-
+		
 		player = Player()
 		all_sprites.add(player)
 		for i in range(8):
@@ -251,7 +263,7 @@ while running:
 		
 
 	all_sprites.update()
-
+	
 	#colisiones - meteoro - laser
 	hits = pygame.sprite.groupcollide(meteor_list, bullets, True, True)
 	for hit in hits:
@@ -293,4 +305,7 @@ while running:
 		enemigo_aparecido = True
 	if enemigo_aparecido:
 		enemigo.update()
+		
+		
 pygame.quit()
+
