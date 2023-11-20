@@ -1,4 +1,6 @@
 import pygame, random, time
+
+
 #ancho y alto de la ventana
 WIDTH = 800
 HEIGHT = 600
@@ -191,7 +193,11 @@ class Explosion(pygame.sprite.Sprite):
 				self.image = explosion_anim[self.frame]
 				self.rect = self.image.get_rect()
 				self.rect.center = center
+
 def show_intro_screen():
+
+
+    pygame.display.flip()
     screen.blit(background, [0,0])
     draw_text(screen,"TRABAJO PRACTICO PYTHON", 40, WIDTH // 2, HEIGHT // 7)
     draw_text(screen,"integrantes:",30, WIDTH // 2, HEIGHT // 4)
@@ -213,12 +219,14 @@ def show_intro_screen():
 
 
 def show_go_screen():
+
 	screen.blit(background, [0,0])
 	draw_text(screen, "VIAJE AL ESPACIO", 75, WIDTH // 2, HEIGHT // 4)
 	draw_text(screen, "Usar flechas direccionales para moverte en la pantalla y espacio para disparar", 22, WIDTH // 2, HEIGHT // 2)
 	draw_text(screen, "Presione una tecla para iniciar y Buena suerte :D", 20, WIDTH // 2, HEIGHT * 3/4)
 	pygame.display.flip()
 	waiting = True
+
 	while waiting:
 		clock.tick(60)
 		for event in pygame.event.get():
@@ -267,6 +275,7 @@ pygame.mixer.music.set_volume(0.2)
 
 
 #### ----------GAME OVER
+show_intro_screen()
 game_over = True
 running = True
 pygame.mixer.music.play(loops=-1)
@@ -324,7 +333,7 @@ while running:
 	# Checar colisiones - jugador - meteoro
 	hits = pygame.sprite.spritecollide(player, meteor_list, True)
 	for hit in hits:
-		#player.shield -= 25
+		player.shield -= 25
 		if score < puntos:
 			meteor = Meteor()
 			all_sprites.add(meteor)
@@ -334,7 +343,7 @@ while running:
 	# Checamos colisiones jugador - misiles
 	hits = pygame.sprite.spritecollide(player, misiles_list, True)
 	for hit in hits:
-		player.shield -= 25
+		#player.shield -= 25
 		explosion = Explosion(hit.rect.center)
 		all_sprites.add(explosion)
 		if player.shield <= 0:
@@ -388,3 +397,4 @@ while running:
 	pygame.display.flip()
 	
 pygame.quit()
+
