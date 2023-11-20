@@ -195,7 +195,7 @@ def show_intro_screen():
     screen.blit(background, [0,0])
     draw_text(screen,"TRABAJO PRACTICO PYTHON", 40, WIDTH // 2, HEIGHT // 7)
     draw_text(screen,"integrantes:",30, WIDTH // 2, HEIGHT // 4)
-    draw_text(screen," Franco Macri , Johnny , Rafael Arvelo Cabrera , Agustin Bardelli	",20, WIDTH // 2, HEIGHT // 3)
+    draw_text(screen," Franco Macri , Johnny Rafael Arvelo Cabrera , Agustin Bardelli	",20, WIDTH // 2, HEIGHT // 3)
     draw_text(screen,"Ramos Florecia Ayelen , Elias Serantes , Leon Caceres Christian", 20, WIDTH // 2, HEIGHT // 2)
     draw_text(screen,"Presione enter para continuar...", 22, WIDTH // 2, HEIGHT // 1.5)
    
