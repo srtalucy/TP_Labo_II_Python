@@ -334,7 +334,7 @@ while running:
 	# Checamos colisiones jugador - misiles
 	hits = pygame.sprite.spritecollide(player, misiles_list, True)
 	for hit in hits:
-		#player.shield -= 25
+		player.shield -= 25
 		explosion = Explosion(hit.rect.center)
 		all_sprites.add(explosion)
 		if player.shield <= 0:
