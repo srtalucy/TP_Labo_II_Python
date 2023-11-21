@@ -201,7 +201,7 @@ def show_intro_screen():
     screen.blit(background, [0,0])
     draw_text(screen,"TRABAJO PRACTICO PYTHON", 40, WIDTH // 2, HEIGHT // 7)
     draw_text(screen,"integrantes:",30, WIDTH // 2, HEIGHT // 4)
-    draw_text(screen," Franco Macri , Johnny Rafael Arvelo Cabrera , Agustin Bardelli	",20, WIDTH // 2, HEIGHT // 3)
+    draw_text(screen," Franco Macri , Johnny Rafael Arvelo Cabrera , Agustin Bardelli   ",20, WIDTH // 2, HEIGHT // 3)
     draw_text(screen,"Ramos Florecia Ayelen , Elias Serantes , Leon Caceres Christian", 20, WIDTH // 2, HEIGHT // 2)
     draw_text(screen,"Presione enter para continuar...", 22, WIDTH // 2, HEIGHT // 1.5)
    
@@ -285,7 +285,6 @@ puntos = 100 #Cantidad de puntos para que aparezca el jefe
 last_misil_time = pygame.time.get_ticks()
 while running:
 	if game_over:
-
 		show_go_screen()
 		game_over = False
 		all_sprites = pygame.sprite.Group()
@@ -295,13 +294,14 @@ while running:
 		enemigo_aparecido = False
 		player = Player()
 		all_sprites.add(player)
-		
+		score = 0
+		puntos = 100
 		for i in range(15):
 		  	meteor = Meteor()
 		  	all_sprites.add(meteor)
 		  	meteor_list.add(meteor)
 
-		score = 0
+
 
 
 		
@@ -356,10 +356,20 @@ while running:
 			if enemigo.vida <= 0:
 				enemigo.kill()  # Elimina al enemigo si su vida llega a cero o menos
 				enemigo_aparecido = False  # Restablece el indicador para que pueda aparecer de nuevo
-				game_over = True
-
-	
-    
+				game_over = False
+				puntos = puntos+200
+				pygame.time.delay(1000)
+				if enemigo.vida == 0 :
+					if player.shield <=50:
+						player.shield += 50
+					else:
+						if player.shield != 100:
+							player.shield += 25
+					for i in range(7):
+			  			meteor = Meteor()
+		  				all_sprites.add(meteor)
+		  				meteor_list.add(meteor)
+     
 
 	screen.blit(background, [0, 0])
 	all_sprites.draw(screen)
