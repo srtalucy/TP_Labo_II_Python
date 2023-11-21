@@ -15,9 +15,6 @@ screen = pygame.display.set_mode((WIDTH, HEIGHT))
 pygame.display.set_caption("Trabajo Integrador Pygame") #le ponemos nombre a la ventana
 clock = pygame.time.Clock() 
 
-
-
-
 def draw_text(surface, text, size, x, y):
 	font = pygame.font.SysFont("serif", size)
 	text_surface = font.render(text, True, WHITE)
@@ -83,7 +80,7 @@ class Player(pygame.sprite.Sprite):
 		bullet = Bullet(self.rect.centerx, self.rect.top)
 		all_sprites.add(bullet)
 		bullets.add(bullet)
-		#laser_sound.play()
+		laser_sound.play()
 
 class Meteor(pygame.sprite.Sprite):
 	def __init__(self):
@@ -216,8 +213,6 @@ def show_intro_screen():
             if event.type == pygame.KEYUP:
                 waiting = False
 
-
-
 def show_go_screen():
 
 	screen.blit(background, [0,0])
@@ -235,7 +230,6 @@ def show_go_screen():
 			if event.type == pygame.KEYUP:
 				waiting = False
 
-
 meteor_images = []
 meteor_list = ["assets/meteorGrey_big1.png", "assets/meteorGrey_big2.png", "assets/meteorGrey_big3.png", 
 			   "assets/meteorGrey_big4.png", "assets/meteorGrey_med1.png", "assets/meteorGrey_med2.png", 
@@ -248,12 +242,10 @@ meteor_list = ["assets/meteorGrey_big1.png", "assets/meteorGrey_big2.png", "asse
 for img in meteor_list:
 	meteor_images.append(pygame.image.load(img).convert())
 
-
 misiles_images = []
 misiles_list = ["assets/Misil_1.png", "assets/Misil_2.png"]
 for img in misiles_list:
 	misiles_images.append(pygame.image.load(img).convert())
-
 
 ####----------------EXPLOSTION IMAGENES --------------
 explosion_anim = []
@@ -272,7 +264,6 @@ laser_sound = pygame.mixer.Sound("assets/laser5.ogg")
 explosion_sound = pygame.mixer.Sound("assets/explosion.wav")
 pygame.mixer.music.load("assets/Modelo de musica Prueba.mp3")
 pygame.mixer.music.set_volume(0.2)
-
 
 #### ----------GAME OVER
 show_intro_screen()
@@ -301,11 +292,6 @@ while running:
 		  	all_sprites.add(meteor)
 		  	meteor_list.add(meteor)
 
-
-
-
-		
-
 	current_time = pygame.time.get_ticks()
 	clock.tick(60)
 	for event in pygame.event.get():
@@ -316,14 +302,13 @@ while running:
 			if event.key == pygame.K_SPACE:
 				player.shoot()
 		
-
 	all_sprites.update()
 
 	#colisiones - meteoro - laser
 	hits = pygame.sprite.groupcollide(meteor_list, bullets, True, True)
 	for hit in hits:
 		score += 10
-		#explosion_sound.play()
+		explosion_sound.play()
 		explosion = Explosion(hit.rect.center)
 		all_sprites.add(explosion)
 		if score < puntos:
@@ -343,7 +328,7 @@ while running:
 	# Checamos colisiones jugador - misiles
 	hits = pygame.sprite.spritecollide(player, misiles_list, True)
 	for hit in hits:
-		#player.shield -= 25
+		player.shield -= 25
 		explosion = Explosion(hit.rect.center)
 		all_sprites.add(explosion)
 		if player.shield <= 0:
@@ -357,7 +342,7 @@ while running:
 				enemigo.kill()  # Elimina al enemigo si su vida llega a cero o menos
 				enemigo_aparecido = False  # Restablece el indicador para que pueda aparecer de nuevo
 				game_over = False
-				puntos = puntos+200
+				puntos = score+200
 				pygame.time.delay(1000)
 				if enemigo.vida == 0 :
 					if player.shield <=50:
@@ -369,12 +354,10 @@ while running:
 			  			meteor = Meteor()
 		  				all_sprites.add(meteor)
 		  				meteor_list.add(meteor)
-     
 
 	screen.blit(background, [0, 0])
 	all_sprites.draw(screen)
        
-
 	#hacer aparecer el enemigo
 	if score >= puntos and not enemigo_aparecido:
 		enemigo = Enemigo()
@@ -394,7 +377,6 @@ while running:
 			misiles_list.add(misil)
 			last_misil_time = current_time
 			
-
 	# Marcador
 	draw_text(screen, str(score), 25, WIDTH // 2, 10)
 	# Escudo.
@@ -403,8 +385,6 @@ while running:
 	if score >= puntos:
 		draw_shield_bar(screen,140,5, enemigo.vida, 500,2)
 
-
 	pygame.display.flip()
 	
 pygame.quit()
-
