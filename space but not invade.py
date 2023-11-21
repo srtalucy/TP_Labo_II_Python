@@ -117,7 +117,6 @@ class Enemigo(pygame.sprite.Sprite):
         self.speed_X = 4
         self.vida = 100 # Agregamos la vida inicial del enemigo
         
-	
     def update(self):
         self.speed_Y = 0
         if (self.rect.centery != 100):
@@ -128,7 +127,6 @@ class Enemigo(pygame.sprite.Sprite):
             if self.rect.right > WIDTH or self.rect.left < 0:
                 self.speed_X = -self.speed_X  # Invierte la dirección
 
-        		
 class Misil(pygame.sprite.Sprite):
 	def __init__(self,x,y):
 		super().__init__()
@@ -192,7 +190,6 @@ class Explosion(pygame.sprite.Sprite):
 				self.rect.center = center
 
 def show_intro_screen():
-
 
     pygame.display.flip()
     screen.blit(background, [0,0])
@@ -286,6 +283,7 @@ while running:
 		player = Player()
 		all_sprites.add(player)
 		score = 0
+		damage = 10
 		puntos = 100
 		for i in range(15):
 		  	meteor = Meteor()
@@ -337,12 +335,17 @@ while running:
 	if score >= puntos:
 		hits = pygame.sprite.spritecollide(enemigo, bullets, True)
 		for hit in hits:
-			enemigo.vida -= 10  # Resta vida al enemigo cuando es alcanzado por una bala
+			if i < 1:
+				enemigo.vida -= 0
+				pygame.time.delay(1000)
+				i += 1
+			enemigo.vida -= damage  # Resta vida al enemigo cuando es alcanzado por una bala
 			if enemigo.vida <= 0:
 				enemigo.kill()  # Elimina al enemigo si su vida llega a cero o menos
 				enemigo_aparecido = False  # Restablece el indicador para que pueda aparecer de nuevo
 				game_over = False
 				puntos = score+200
+				damage = damage/2
 				pygame.time.delay(1000)
 				if enemigo.vida == 0 :
 					if player.shield <=50:
@@ -365,7 +368,7 @@ while running:
 		enemigo_aparecido = True
 	if enemigo_aparecido:
 		enemigo.update()
-		
+
 	if score >= puntos:
 		if current_time - last_misil_time >= 300:
 			cuadrantemisil = [70,100,150,200,250,300,350,400,450,500,550,600,650,700]
