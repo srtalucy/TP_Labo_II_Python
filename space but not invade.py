@@ -335,21 +335,19 @@ while running:
 	if score >= puntos:
 		hits = pygame.sprite.spritecollide(enemigo, bullets, True)
 		for hit in hits:
-			if i < 1:
+			if enemigo.speed_Y == 1:
 				enemigo.vida -= 0
-				pygame.time.delay(1000)
-				i += 1
-			enemigo.vida -= damage  # Resta vida al enemigo cuando es alcanzado por una bala
+			else:
+				enemigo.vida -= damage  # Resta vida al enemigo cuando es alcanzado por una bala
 			if enemigo.vida <= 0:
 				enemigo.kill()  # Elimina al enemigo si su vida llega a cero o menos
 				enemigo_aparecido = False  # Restablece el indicador para que pueda aparecer de nuevo
 				game_over = False
 				puntos = score+200
 				damage = damage/2
-				pygame.time.delay(1000)
 				if enemigo.vida == 0 :
 					if player.shield <=50:
-						player.shield += 50
+						player.shield += 50  
 					else:
 						if player.shield != 100:
 							player.shield += 25
